@@ -28,14 +28,14 @@ export const addCourse = async (req, res) => {
   try {
     const { courseData } = req.body;
     const imageFile = req.file;
-    const { userId: educatorId } = req.auth.userId;
+    const { userId: educator } = req.auth();
 
     if (!imageFile) {
       return res.json({ success: false, message: "Thumbnail Not Attached" });
     }
 
     const parsedCourseData = await JSON.parse(courseData);
-    parsedCourseData.educator = educatorId;
+    parsedCourseData.educator = educator;
     const newCourse = await Course.create(parsedCourseData);
     const imageUpload = await cloudinary.uploader.upload(imageFile.path);
     newCourse.courseThumbnail = imageUpload.secure_url;
@@ -50,8 +50,8 @@ export const addCourse = async (req, res) => {
 // Get Educator Courses
 export const getEducatorCourses = async (req, res) => {
   try {
-    const { userId: educatorId } = req.auth();
-    const courses = await Course.find({ educatorId });
+    const { userId: educator } = req.auth();
+    const courses = await Course.find({ educator });
     res.json({ success: true, courses });
   } catch (error) {
     res.json({ success: false, message: error.message });
@@ -62,8 +62,8 @@ export const getEducatorCourses = async (req, res) => {
 
 export const educatorDashboardData = async (req, res) => {
   try {
-    const { userId: educatorId } = req.auth();
-    const courses = await Course.find({ educatorId });
+    const { userId: educator } = req.auth();
+    const courses = await Course.find({ educator });
     const totalCourses = courses.length;
 
     const courseIds = courses.map((course) => course._id);
@@ -112,8 +112,8 @@ export const educatorDashboardData = async (req, res) => {
 // Get Enrolled Students datwa with Purchase Data
 export const getEnrolledStudentsData = async (req, res) => {
   try {
-    const { userId: educatorId } = req.auth();
-    const courses = await Course.find({ educatorId });
+    const { userId: educator } = req.auth();
+    const courses = await Course.find({ educator });
     const courseIds = courses.map((course) => course._id);
 
     const purchases = await Purchase.find({

@@ -90,8 +90,8 @@ export const stripeWebhooks = async (request, response) => {
         purchaseData.courseId.toString()
       );
 
-      courseData.enrolledStudents.push(userData);
-      await userData.save();
+      courseData.enrolledStudents.push(userData._id.toString());
+      await courseData.save();
 
       userData.enrolledCourses.push(courseData._id);
       await userData.save();

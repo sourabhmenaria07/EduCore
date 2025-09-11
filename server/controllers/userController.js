@@ -94,6 +94,9 @@ export const purchaseCourse = async (req, res) => {
 export const updateUserCourseProgress = async (req, res) => {
   try {
     const { userId } = req.auth();
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
     const { courseId, lectureId } = req.body;
     const progressData = await CourseProgress.findOne({ userId, courseId });
 
@@ -152,7 +155,7 @@ export const addUserRating = async (req, res) => {
     if (!user || !user.enrolledCourses.includes(courseId)) {
       return res.json({
         success: false,
-        message: "User has not purchased thid course.",
+        message: "User has not purchased this course.",
       });
     }
 
