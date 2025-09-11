@@ -83,18 +83,12 @@ export const stripeWebhooks = async (request, response) => {
       });
 
       const { purchaseId } = session.data[0].metadata;
-      console.log("purchaseId", purchaseId);
 
       const purchaseData = await Purchase.findById(purchaseId);
       const userData = await User.findById(purchaseData.userId);
       const courseData = await Course.findById(
         purchaseData.courseId.toString()
       );
-      console.log("🎯 Starting course enrollment update...");
-      console.log("purchaseData.courseId:", purchaseData.courseId);
-      console.log("userData", userData);
-      const before = await Course.findById(purchaseData.courseId);
-      console.log("Course before update:", before?.enrolledStudents);
 
       courseData.enrolledStudents.push(userData._id);
       await courseData.save();
