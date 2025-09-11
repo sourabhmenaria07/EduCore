@@ -92,11 +92,11 @@ export const stripeWebhooks = async (request, response) => {
       );
       console.log("🎯 Starting course enrollment update...");
       console.log("purchaseData.courseId:", purchaseData.courseId);
-      console.log("userData._id:", userData._id);
+      console.log("userData", userData);
       const before = await Course.findById(purchaseData.courseId);
       console.log("Course before update:", before?.enrolledStudents);
 
-      courseData.enrolledStudents.push(userData._id.toString());
+      courseData.enrolledStudents.push(userData._id);
       await courseData.save();
 
       userData.enrolledCourses.push(courseData._id);
