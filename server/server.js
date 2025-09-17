@@ -15,7 +15,15 @@ await connectDB();
 await connectCloudinary();
 
 // middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://educore-bice.vercel.app", "http://localhost:5173"], // allowed frontends
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+app.options("*", cors());
 app.use(clerkMiddleware());
 
 // routes
